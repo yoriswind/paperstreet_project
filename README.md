@@ -48,11 +48,11 @@ No setup is needed for the current version. Clone the repo and open index.html i
 
 Roadmap
 
-Week 2: Five pages and basic layout built. One test record reading and writing from each database to prove both connections work.
+Week 2: Five pages and basic layout built.
 
-Week 3: Login plus buying and selling works, with MySQL connected first and MongoDB added second.
+Week 3: Login plus buying and selling works.
 
-Week 4: Charts and final styling done and everything tested.
+Week 4: MySQL connected first and MongoDB added second. Charts and final styling done and everything tested.
 
 Team
 

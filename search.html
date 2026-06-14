@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>PaperStreet - Stock Search</title>
+</head>
+<body>
+  <h1>PaperStreet</h1>
+  <nav>
+    <a href="index.html">Home</a> |
+    <a href="auth.html">Login / Register</a> |
+    <a href="dashboard.html">Dashboard</a> |
+    <a href="search.html">Stock Search</a> |
+    <a href="portfolio.html">Portfolio</a>
+  </nav>
+  <hr>
+
+  <h2>Stock Search</h2>
+  <form onsubmit="handleSearch(event)">
+    <label for="symbol">Search by symbol or name:</label><br>
+    <input type="text" id="symbol" name="symbol" placeholder="e.g. AAPL">
+    <input type="submit" value="Search">
+  </form>
+
+  <hr>
+  <h3>Available Stocks</h3>
+  <p><small>[IN PROGRESS] Stock list and prices pulled from price_history collection in MongoDB.</small></p>
+  <table border="1">
+    <tr>
+      <th>Symbol</th>
+      <th>Company</th>
+      <th>Price</th>
+      <th>Change</th>
+    </tr>
+    <tr><td>AAPL</td><td>Apple Inc.</td><td>$178.40</td><td>+1.2%</td></tr>
+    <tr><td>MSFT</td><td>Microsoft Corp.</td><td>$334.20</td><td>+0.8%</td></tr>
+    <tr><td>TSLA</td><td>Tesla Inc.</td><td>$231.50</td><td>-1.4%</td></tr>
+    <tr><td>NVDA</td><td>Nvidia Corp.</td><td>$487.20</td><td>+2.1%</td></tr>
+    <tr><td>AMZN</td><td>Amazon.com Inc.</td><td>$183.75</td><td>+0.9%</td></tr>
+    <tr><td>GOOGL</td><td>Alphabet Inc.</td><td>$141.60</td><td>+0.5%</td></tr>
+    <tr><td>META</td><td>Meta Platforms Inc.</td><td>$312.90</td><td>+1.7%</td></tr>
+    <tr><td>AMD</td><td>Advanced Micro Devices</td><td>$142.60</td><td>-0.4%</td></tr>
+    <tr><td>NFLX</td><td>Netflix Inc.</td><td>$445.30</td><td>+0.3%</td></tr>
+    <tr><td>DIS</td><td>Walt Disney Co.</td><td>$91.80</td><td>-0.6%</td></tr>
+  </table>
+
+  <br>
+  <h3>Buy Shares</h3>
+  <form onsubmit="handleBuy(event)">
+    <label for="buy-symbol">Stock:</label><br>
+    <select id="buy-symbol" name="symbol">
+      <option value="AAPL">AAPL - Apple Inc. ($178.40)</option>
+      <option value="MSFT">MSFT - Microsoft Corp. ($334.20)</option>
+      <option value="TSLA">TSLA - Tesla Inc. ($231.50)</option>
+      <option value="NVDA">NVDA - Nvidia Corp. ($487.20)</option>
+      <option value="AMZN">AMZN - Amazon.com Inc. ($183.75)</option>
+      <option value="GOOGL">GOOGL - Alphabet Inc. ($141.60)</option>
+      <option value="META">META - Meta Platforms Inc. ($312.90)</option>
+      <option value="AMD">AMD - Advanced Micro Devices ($142.60)</option>
+      <option value="NFLX">NFLX - Netflix Inc. ($445.30)</option>
+      <option value="DIS">DIS - Walt Disney Co. ($91.80)</option>
+    </select><br><br>
+    <label for="shares">Number of shares:</label><br>
+    <input type="text" id="shares" name="shares"><br><br>
+    <input type="submit" value="Buy">
+  </form>
+
+  <br>
+  <h3>Add to Watchlist</h3>
+  <form onsubmit="handleWatchlist(event)">
+    <select id="watch-symbol" name="symbol">
+      <option value="AAPL">AAPL - Apple Inc.</option>
+      <option value="MSFT">MSFT - Microsoft Corp.</option>
+      <option value="TSLA">TSLA - Tesla Inc.</option>
+      <option value="NVDA">NVDA - Nvidia Corp.</option>
+      <option value="AMZN">AMZN - Amazon.com Inc.</option>
+      <option value="GOOGL">GOOGL - Alphabet Inc.</option>
+      <option value="META">META - Meta Platforms Inc.</option>
+      <option value="AMD">AMD - Advanced Micro Devices</option>
+      <option value="NFLX">NFLX - Netflix Inc.</option>
+      <option value="DIS">DIS - Walt Disney Co.</option>
+    </select>
+    <input type="submit" value="Add to Watchlist">
+  </form>
+
+  <script>
+    var prices = {
+      AAPL: 178.40, MSFT: 334.20, TSLA: 231.50, NVDA: 487.20, AMZN: 183.75,
+      GOOGL: 141.60, META: 312.90, AMD: 142.60, NFLX: 445.30, DIS: 91.80
+    };
+
+    function handleSearch(e) {
+      e.preventDefault();
+      var q = document.getElementById('symbol').value.trim().toUpperCase();
+      if (!q) {
+        alert('Please enter a stock symbol or name.');
+        return;
+      }
+      alert(
+        '[IN PROGRESS]\n\n' +
+        'MongoDB query:\n' +
+        'db.price_history.findOne({ symbol: "' + q + '" })\n\n' +
+        'Looks up the stock in the price_history collection in MongoDB.\n' +
+        'Returns the current price and recent price history for the chart.\n' +
+        'If the symbol does not exist, returns a not found message.\n\n' +
+        '---\n' +
+        'For now: showing the full stock list below as sample results.'
+      );
+    }
+
+    function handleBuy(e) {
+      e.preventDefault();
+      var symbol = document.getElementById('buy-symbol').value;
+      var shares = document.getElementById('shares').value.trim();
+      if (!shares || isNaN(shares) || parseInt(shares) < 1) {
+        alert('Please enter a valid number of shares.');
+        return;
+      }
+      shares = parseInt(shares);
+      var price = prices[symbol];
+      var total = (shares * price).toFixed(2);
+      alert(
+        '[IN PROGRESS]\n\n' +
+        'Buying ' + shares + ' share(s) of ' + symbol + ' at $' + price + ' each.\n' +
+        'Total cost: $' + total + '\n\n' +
+        'MySQL queries:\n' +
+        '1. SELECT balance FROM accounts WHERE user_id = [session user_id]\n' +
+        '   Checks if user has enough cash (need $' + total + ')\n\n' +
+        '2. If balance is sufficient:\n' +
+        '   UPDATE accounts SET balance = balance - ' + total + ' WHERE user_id = [session user_id]\n\n' +
+        '3. INSERT INTO trades (user_id, symbol, type, shares, price, total)\n' +
+        '   VALUES ([user_id], "' + symbol + '", "buy", ' + shares + ', ' + price + ', ' + total + ')\n\n' +
+        'If balance is insufficient:\n' +
+        '  - Trade is rejected\n\n' +
+        '---\n' +
+        'For now: this button would record the trade in MySQL, deduct the cost from your balance, and show the new position on the Dashboard. Until the database is connected, it just sends you to the Dashboard with its sample data unchanged.'
+      );
+      window.location.href = 'dashboard.html';
+    }
+
+    function handleWatchlist(e) {
+      e.preventDefault();
+      var symbol = document.getElementById('watch-symbol').value;
+      alert(
+        '[IN PROGRESS]\n\n' +
+        'MongoDB query:\n' +
+        'db.watchlist.insertOne({\n' +
+        '  user_id: [session user_id],\n' +
+        '  symbol: "' + symbol + '",\n' +
+        '  added_at: [current timestamp]\n' +
+        '})\n\n' +
+        'Adds ' + symbol + ' to the watchlist collection in MongoDB for this user.\n' +
+        'If the symbol is already on the watchlist, the insert is skipped.\n\n' +
+        '---\n' +
+        'For now: this button would add ' + symbol + ' to MongoDB and show it on the Portfolio watchlist. Until the database is connected, it just sends you to the Portfolio with its sample watchlist unchanged.'
+      );
+      window.location.href = 'portfolio.html';
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>PaperStreet - Portfolio</title>
+</head>
+<body>
+  <h1>PaperStreet</h1>
+  <nav>
+    <a href="index.html">Home</a> |
+    <a href="auth.html">Login / Register</a> |
+    <a href="dashboard.html">Dashboard</a> |
+    <a href="search.html">Stock Search</a> |
+    <a href="portfolio.html">Portfolio</a>
+  </nav>
+  <hr>
+
+  <h2>Portfolio</h2>
+  <p><small>[IN PROGRESS] Holdings calculated from trades table in MySQL. Grouped by symbol: total buy shares minus total sell shares.</small></p>
+
+  <h3>Holdings</h3>
+  <table border="1">
+    <tr>
+      <th>Symbol</th>
+      <th>Company</th>
+      <th>Shares</th>
+      <th>Value</th>
+      <th>Return</th>
+      <th>Action</th>
+    </tr>
+    <tr>
+      <td>AAPL</td><td>Apple Inc.</td><td>5</td><td>$892.00</td><td>+4.2%</td>
+      <td><button onclick="handleSell('AAPL', 5, 178.40)">Sell</button></td>
+    </tr>
+    <tr>
+      <td>TSLA</td><td>Tesla Inc.</td><td>3</td><td>$694.50</td><td>-6.7%</td>
+      <td><button onclick="handleSell('TSLA', 3, 231.50)">Sell</button></td>
+    </tr>
+    <tr>
+      <td>MSFT</td><td>Microsoft Corp.</td><td>4</td><td>$1,336.80</td><td>+4.8%</td>
+      <td><button onclick="handleSell('MSFT', 4, 334.20)">Sell</button></td>
+    </tr>
+  </table>
+
+  <br>
+  <h3>Trade History</h3>
+  <p><small>[IN PROGRESS] Pulled from trades table in MySQL ordered by date descending.</small></p>
+  <button onclick="handleTradeHistory()">Load Trade History</button>
+
+  <br><br>
+  <h3>Watchlist</h3>
+  <p><small>[IN PROGRESS] Pulled from watchlist collection in MongoDB. Each document contains user_id, symbol, and added_at timestamp.</small></p>
+  <table border="1">
+    <tr>
+      <th>Symbol</th>
+      <th>Company</th>
+      <th>Price</th>
+      <th>Change</th>
+      <th>Action</th>
+    </tr>
+    <tr>
+      <td>NVDA</td><td>Nvidia Corp.</td><td>$487.20</td><td>+2.1%</td>
+      <td><button onclick="handleRemoveWatchlist('NVDA')">Remove</button></td>
+    </tr>
+    <tr>
+      <td>AMD</td><td>Advanced Micro Devices</td><td>$142.60</td><td>-0.4%</td>
+      <td><button onclick="handleRemoveWatchlist('AMD')">Remove</button></td>
+    </tr>
+    <tr>
+      <td>AMZN</td><td>Amazon.com Inc.</td><td>$183.75</td><td>+0.9%</td>
+      <td><button onclick="handleRemoveWatchlist('AMZN')">Remove</button></td>
+    </tr>
+  </table>
+
+  <br>
+  <a href="search.html">Buy a stock</a>
+
+  <script>
+    function handleSell(symbol, ownedShares, price) {
+      var shares = prompt('How many shares of ' + symbol + ' do you want to sell? You own ' + ownedShares + '.');
+      if (!shares) return;
+      shares = parseInt(shares);
+      if (isNaN(shares) || shares < 1 || shares > ownedShares) {
+        alert('Please enter a valid number of shares between 1 and ' + ownedShares + '.');
+        return;
+      }
+      var total = (shares * price).toFixed(2);
+      alert(
+        '[IN PROGRESS]\n\n' +
+        'Selling ' + shares + ' share(s) of ' + symbol + ' at $' + price + ' each.\n' +
+        'Total proceeds: $' + total + '\n\n' +
+        'MySQL queries:\n' +
+        '1. INSERT INTO trades (user_id, symbol, type, shares, price, total)\n' +
+        '   VALUES ([user_id], "' + symbol + '", "sell", ' + shares + ', ' + price + ', ' + total + ')\n\n' +
+        '2. UPDATE accounts SET balance = balance + ' + total + '\n' +
+        '   WHERE user_id = [session user_id]\n\n' +
+        '---\n' +
+        'For now: this button would record the sell in MySQL, add the proceeds to your balance, and update your holdings. Until the database is connected, it just sends you to the Dashboard with its sample data unchanged.'
+      );
+      window.location.href = 'dashboard.html';
+    }
+
+    function handleTradeHistory() {
+      alert(
+        '[IN PROGRESS]\n\n' +
+        'MySQL query:\n' +
+        'SELECT symbol, type, shares, price, total, created_at\n' +
+        'FROM trades\n' +
+        'WHERE user_id = [session user_id]\n' +
+        'ORDER BY created_at DESC\n\n' +
+        'Returns the full trade history for this user.\n\n' +
+        '---\n' +
+        'For now: no live data yet. This will show all buys and sells once MySQL is connected.'
+      );
+    }
+
+    function handleRemoveWatchlist(symbol) {
+      alert(
+        '[IN PROGRESS]\n\n' +
+        'MongoDB query:\n' +
+        'db.watchlist.deleteOne({\n' +
+        '  user_id: [session user_id],\n' +
+        '  symbol: "' + symbol + '"\n' +
+        '})\n\n' +
+        'Removes ' + symbol + ' from this user\'s watchlist in MongoDB.\n\n' +
+        '---\n' +
+        'For now: this button would delete ' + symbol + ' from MongoDB and remove it from the page, but the row will stay where it is until the database is connected.'
+      );
+    }
+  </script>
+</body>
+</html>

@@ -46,8 +46,6 @@ Running the prototype
 
 No setup is needed for the current version. Clone the repo and open index.html in a web browser. The Live Server extension in VS Code also works.
 
-git clone https://github.com/YOUR_USERNAME/paperstreet.git
-
 Roadmap
 
 Week 2: Five pages and basic layout built. One test record reading and writing from each database to prove both connections work.
